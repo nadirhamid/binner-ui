@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Binner Examples</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+    <!-- Genericons core CSS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.1.1/angular-material.min.css">
+
+    <!-- Page specific CSS files -->
+    {% block head %}{% endblock %}
+
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/vendors/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/vendors/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body ng-app="binnerWeb">
+    <base href="/"></base>
+    <!-- Main content injection point -->
+    <!-- Wrap content with <main id="wrap"><main>
+          when using the footer block to push the footer down. -->
+    <main id="wrap">
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- The footer is placed within its own block to render properly -->
+    {% block footer %}{% endblock %}
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0-rc.2/angular.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0-rc.2/angular-route.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0-rc.2/angular-aria.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0-rc.2/angular-animate.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.1.1/angular-material.min.js"></script>
+ 	<script type="text/javascript" src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+    <!-- Page specific script files -->
+    {% block scripts %}{% endblock %}
+
+    <script type="text/javascript">
+      // Dynamically add the bootstrap 'active' class to navbar links.
+      $(document).ready(function ($) {
+        var urlPath = window.location.pathname.split('/')[1];
+        // if urlPath is empty, redefine to the string 'index'
+        urlPath === '' ? urlPath = 'index' : urlPath = urlPath;
+        $('.nav a[href="'+ urlPath +'"]').parent().addClass('active');
+      });
+    </script>
+
+  </body>
+</html>

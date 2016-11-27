@@ -1,0 +1,91 @@
+<div class="content">
+	<h1>[[title]]</h1>
+	<p>[[description]]</p>
+	<hr/>
+
+  	<h2>Algorithm</h2>
+	<label class="col-md-4">Type</label>
+	<div class="col-md-8">
+		<select class="form-control" ng-model="selectedAlgorithm" ng-options="option.title for option in algorithms track by option.value"></select>
+	</div>
+	<div class="clearfix"></div>
+	<h2>Bins</h2>
+	<ul>
+	   <li ng-repeat="bin in bins">
+		<div class="col-md-10">
+			<div class="col-md-4">
+				<label class="col-md-6">Width</label>
+				<div class="col-md-6">
+					<input type="number" class="form-control" ng-model="bin.w" />
+				</div>
+			</div>
+			<div class="col-md-4">
+				<label class="col-md-6">Depth</label>
+				<div class="col-md-6">
+					<input type="number" class="form-control" ng-model="bin.d"/>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<label class="col-md-6">Height</label>
+				<div class="col-md-6">
+					<input type="number" class="form-control" ng-model="bin.h"/>
+				</div>
+			</div>
+		  </div>
+		<div class="col-md-2">
+			<button class="btn btn-danger" ng-click="removeBin(bin)">X</button>
+		</div>
+		<div class="clearfix"></div>
+	     </li>
+	  <div class="clearfix"></div>
+	  <button ng-click="addBin()" class="btn btn-success">Add Bin</button>
+       </ul>
+       <h2>Items</h2>
+       <ul>
+	  <li ng-repeat="item in items">
+		<div class="col-md-10">
+			<div class="col-md-4">
+				<label class="col-md-6">Width</label>
+				<div class="col-md-6">
+					<input type="number" class="form-control" ng-model="item.w"/>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<label class="col-md-6">Depth</label>
+				<div class="col-md-6">
+					<input type="number" class="form-control" ng-model="item.d"/>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<label class="col-md-6">Height</label>
+				<div class="col-md-6">
+					<input type="number" class="form-control" ng-model="item.h"/>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<button class="btn btn-danger" ng-click="removeItem(item)">X</button>
+		</div>
+		<div class="clearfix"></div>
+	  </li>
+          <div class="clearfix"></div>
+	 <button ng-click="addItem()" class="btn btn-success">Add Item</button>
+      </ul>
+      <h2>Additional Arguments</h2>
+      <ul>
+	  <li ng-repeat="arg in args">
+		<div class="col-md-2">
+			<select class="form-control" ng-model="arg" ng-options="option.title for option in validArgs track by option.value"></select>
+		</div>
+		<div class="col-md-10">
+			<button class="btn btn-danger" ng-click="removeArgument(arg)">X</button>
+		</div>
+		 <div class="clearfix"></div>
+	  </li>
+	  <div class="clearfix"></div>
+	  <button ng-click="addArgument()" class="btn btn-success">Add Arguments</button>
+      </ul> 
+      <div class="clearfix"></div>
+      <button class="btn btn-primary btn-default" ng-click="getEstimate()">Get Estimate</button>
+</div>
+

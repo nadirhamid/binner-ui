@@ -1,0 +1,31 @@
+<div class="content">
+	<h1>[[title]]</h1>
+	<p>[[description]]</p>
+ 	<hr/>
+	<h2>Packed Bins</h2>
+	<ul>
+	   <li ng-repeat="bin in results.packed">
+		<h2>Bin: [[bin.bin.id]]</h2>
+		<h3>Slots Packed</h3>
+		<ul>
+			<li ng-repeat="slot in bin.slots">
+				<h4 class="col-md-3">Item: [[slot.item.id]]</h4>
+				<label class="col-md-3">Position X ([[slot.min_x]], [[slot.max_x]])</label>
+			 	<label class="col-md-3">Position Y ([[slot.min_y]], [[slot.max_y]])</label>
+				<label class="col-md-3">Position Z ([[slot.min_z]], [[slot.max_z]])</label>
+			</li>
+		</ul>
+	    </li>
+        </ul>
+	<div class="clearfix"></div>
+  	<h2>Lost Items</h2>
+	<ul ng-if="results.lost.length>0">
+	  <li ng-repeat="item in results.lost">
+		<h2>Item: [[item.id]]</h2>
+	  </li>
+        </ul>
+ 	<h3 ng-if="!results.lost.length>0">
+		No lost items</h3>
+	<div class="clearfix"></div>
+        <a ng-href="[['/']]" class="btn btn-primary btn-default">Go Home</a>
+</div>
