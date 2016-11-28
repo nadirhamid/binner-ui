@@ -7,16 +7,16 @@ function DialogCtrl( $scope, $mdDialog, $timeout, message  ) {
 }
 angular.module("binnerWeb", ['ngRoute', 'ngMaterial'])
 	.config( function(  $interpolateProvider, $locationProvider, $routeProvider  ) {
-		$routeProvider.when("/", {
-			"templateUrl": "/static/html/home.html",
+		$routeProvider.when("/binner/", {
+			"templateUrl": "/binner/static/html/home.html",
 			"controller": "HomeCtrl" })
-		.when("/results", {
-			"templateUrl": "/static/html/results.html",
+		.when("/binner/results", {
+			"templateUrl": "/binner/static/html/results.html",
 			"controller": "ResultsCtrl" })
-		.when("/about", {
-			"templateUrl": "/static/html/about.html",
+		.when("/binner/about", {
+			"templateUrl": "/binner/static/html/about.html",
 			"controller": "AboutCtrl" })
-		.otherwise("/");
+		.otherwise("/binner/");
 		$locationProvider.html5Mode(true);
 		$interpolateProvider.startSymbol("[[");
 		$interpolateProvider.endSymbol("]]");
@@ -54,6 +54,13 @@ angular.module("binnerWeb", ['ngRoute', 'ngMaterial'])
 				"title": "Smallest Bin Fit",
 				"value": "smallest"
 			}  ];
+		$scope.storeTrue = [{
+			"title": "TRUE",
+			"value": true } ,
+		{
+			"title": "FALSE",
+			"value": false }];
+		$scope.multiUseSmallestBins = $scope.storeTrue[0];
 		$scope.selectedAlgorithm = $scope.algorithms[0];
 
 
@@ -62,7 +69,7 @@ angular.module("binnerWeb", ['ngRoute', 'ngMaterial'])
 		$scope.items = [];
 		function onResult( response ) {
 			$shared.setResults( response.data );
-			$location.path("/results");
+			$location.path("/binner/results");
 		}
 		function onError( response ) {
 			 $mdDialog.show({
@@ -71,20 +78,18 @@ angular.module("binnerWeb", ['ngRoute', 'ngMaterial'])
 				"controller": DialogCtrl,
 				"scope": {
 					"message": response },
-				"templateUrl": "/static/html/dialog.html" } );
+				"templateUrl": "/binner/static/html/dialog.html" } );
 		}
 			
 		$scope.getEstimate = function() {
 			var args = {};
-			angular.forEach( $scope.args, function( arg  ) {
-			 	args[ arg.value ]  =true;
-			} );
+			args['multi_use_smallest_bins']=$scope.multiUseSmallestBins.value;
 			args['algorithm'] = $scope.selectedAlgorithm.value;
 			var fullData = {
 				"args":  args,
 				"items": $scope.items,
 				"bins": $scope.bins };
-			$http.post("/estimate", fullData).then(onResult, onError);
+			$http.post("/binner/estimate", fullData).then(onResult, onError);
 		 };
 	 	$scope.addArgument = function() {
 	                $scope.args.push( angular.copy( $scope.validArgs[0] ) );

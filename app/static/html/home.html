@@ -71,19 +71,12 @@
           <div class="clearfix"></div>
 	 <button ng-click="addItem()" class="btn btn-success">Add Item</button>
       </ul>
-      <h2>Additional Arguments</h2>
+      <h2>Arguments</h2>
       <ul>
-	  <li ng-repeat="arg in args">
-		<div class="col-md-2">
-			<select class="form-control" ng-model="arg" ng-options="option.title for option in validArgs track by option.value"></select>
+		<label class="col-md-5">multi_use_smallest_bins</label>
+		<div class="col-md-7">
+			<select class="form-control" ng-model="multiUseSmallestBins" ng-options="option.title for option in storeTrue track by option.value"></select>
 		</div>
-		<div class="col-md-10">
-			<button class="btn btn-danger" ng-click="removeArgument(arg)">X</button>
-		</div>
-		 <div class="clearfix"></div>
-	  </li>
-	  <div class="clearfix"></div>
-	  <button ng-click="addArgument()" class="btn btn-success">Add Arguments</button>
       </ul> 
       <div class="clearfix"></div>
       <button class="btn btn-primary btn-default" ng-click="getEstimate()">Get Estimate</button>
