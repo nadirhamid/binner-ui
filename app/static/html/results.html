@@ -7,13 +7,16 @@
 	   <li ng-repeat="bin in results.packed">
 		<h2>Bin: [[bin.bin.id]]</h2>
 		<h3>Slots Packed</h3>
+		<div class="clearfix"></div>
 		<ul>
 			<li ng-repeat="slot in bin.slots">
 				<h4 class="col-md-3">Item: [[slot.item.id]]</h4>
 				<label class="col-md-3">Position X ([[slot.min_x]], [[slot.max_x]])</label>
 			 	<label class="col-md-3">Position Y ([[slot.min_y]], [[slot.max_y]])</label>
 				<label class="col-md-3">Position Z ([[slot.min_z]], [[slot.max_z]])</label>
+				<div class="clearfix"></div>
 			</li>
+			<div class="clearfix"></div>
 		</ul>
 	    </li>
         </ul>
@@ -22,6 +25,7 @@
 	<ul ng-if="results.lost.length>0">
 	  <li ng-repeat="item in results.lost">
 		<h2>Item: [[item.id]]</h2>
+		<div class="clearfix"></div>
 	  </li>
         </ul>
  	<h3 ng-if="!results.lost.length>0">
