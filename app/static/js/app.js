@@ -7,16 +7,16 @@ function DialogCtrl( $scope, $mdDialog, $timeout, message  ) {
 }
 angular.module("binnerWeb", ['ngRoute', 'ngMaterial'])
 	.config( function(  $interpolateProvider, $locationProvider, $routeProvider  ) {
-		$routeProvider.when("/binner/", {
-			"templateUrl": "/binner/static/html/home.html",
+		$routeProvider.when("/", {
+			"templateUrl": "/static/html/home.html",
 			"controller": "HomeCtrl" })
-		.when("/binner/results", {
-			"templateUrl": "/binner/static/html/results.html",
+		.when("/results", {
+			"templateUrl": "/static/html/results.html",
 			"controller": "ResultsCtrl" })
-		.when("/binner/about", {
-			"templateUrl": "/binner/static/html/about.html",
+		.when("/about", {
+			"templateUrl": "/static/html/about.html",
 			"controller": "AboutCtrl" })
-		.otherwise("/binner/");
+		.otherwise("/");
 		$locationProvider.html5Mode(true);
 		$interpolateProvider.startSymbol("[[");
 		$interpolateProvider.endSymbol("]]");
@@ -69,7 +69,7 @@ angular.module("binnerWeb", ['ngRoute', 'ngMaterial'])
 		$scope.items = [];
 		function onResult( response ) {
 			$shared.setResults( response.data );
-			$location.path("/binner/results");
+			$location.path("/results");
 		}
 		function onError( response ) {
 			 $mdDialog.show({
@@ -78,7 +78,7 @@ angular.module("binnerWeb", ['ngRoute', 'ngMaterial'])
 				"controller": DialogCtrl,
 				"scope": {
 					"message": response },
-				"templateUrl": "/binner/static/html/dialog.html" } );
+				"templateUrl": "/static/html/dialog.html" } );
 		}
 			
 		$scope.getEstimate = function() {
@@ -89,7 +89,7 @@ angular.module("binnerWeb", ['ngRoute', 'ngMaterial'])
 				"args":  args,
 				"items": $scope.items,
 				"bins": $scope.bins };
-			$http.post("/binner/estimate", fullData).then(onResult, onError);
+			$http.post("/estimate", fullData).then(onResult, onError);
 		 };
 	 	$scope.addArgument = function() {
 	                $scope.args.push( angular.copy( $scope.validArgs[0] ) );
