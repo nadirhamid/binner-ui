@@ -4,6 +4,8 @@ function DialogCtrl( $scope, $mdDialog, $timeout, message  ) {
 		$mdDialog.hide();
 	 };
 	$scope.message = message;
+
+	$timeout($mdDialog.hide, 5000);
 }
 angular.module("binnerWeb", ['ngRoute', 'ngMaterial'])
 	.config( function(  $interpolateProvider, $locationProvider, $routeProvider  ) {
@@ -72,12 +74,13 @@ angular.module("binnerWeb", ['ngRoute', 'ngMaterial'])
 			$location.path("/results");
 		}
 		function onError( response ) {
+			 var message = response.data.message||"Unknown error occured";
 			 $mdDialog.show({
 				"parent": document.body,
 				"targetEvent": null,
 				"controller": DialogCtrl,
-				"scope": {
-					"message": response },
+				"locals": {
+					"message": message },
 				"templateUrl": "/static/html/dialog.html" } );
 		}
 			

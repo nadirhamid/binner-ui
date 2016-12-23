@@ -7,6 +7,7 @@ from binner.collection_item import ItemCollection
 from binner.algo_multi import AlgoMulti
 from binner.algo_smallest import AlgoSmallest
 from binner.algo_single import AlgoSingle
+from binner.exception import DistributionException
 import json
 
 # ROUTING/VIEW FUNCTIONS
@@ -39,10 +40,14 @@ def estimate():
  	try:
 		result = target_algo.run().show()
 		return Response( json.dumps ( result  ),  status=200 )
+	## handle binner exceptions
+	except DistributionException, ex:
+		message = "Distribution Error: %s"%(str(ex))
+		return Response( json.dumps( {"message": message } ), status=500 )
 	except Exception, ex:
 		binner_response = repr( ex  )
 		message = "Error occured in Binner: %s"%(binner_response)
-		return Response( message, status=500 )
+		return Response( json.dumps( { "message": message } ), status=500 )
 	
 		
 
