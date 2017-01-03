@@ -37,9 +37,16 @@ def estimate():
 		target_algo = AlgoSmallest( args, bin_collection, item_collection )
 	elif args.algorithm == "single":
 		target_algo= AlgoSingle( args, bin_collection, item_collection )
+
  	try:
 		result = target_algo.run().show()
-		return Response( json.dumps ( result  ),  status=200 )
+
+		xhr_storage_path = "%s/static/data/%s.json"%(app.root_path, result['run']['id'])
+		json_result = json.dumps( result )
+		with open( xhr_storage_path, "w+" ) as xhr_storage_file:
+		    xhr_storage_file.write( json_result )
+
+		return Response( json_result,  status=200 )
 	## handle binner exceptions
 	except DistributionException, ex:
 		message = "Distribution Error: %s"%(str(ex))

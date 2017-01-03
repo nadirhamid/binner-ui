@@ -7,8 +7,7 @@
 	   <li ng-repeat="bin in results.packed">
 		<h2>Bin: [[bin.bin.id]]</h2>
 		<h3>Slots Packed</h3>
-		<div class="clearfix"></div>
-		<ul>
+		<ul class="col-md-8">
 			<li ng-repeat="slot in bin.slots">
 				<h4 class="col-md-3">Item: [[slot.item.id]]</h4>
 				<label class="col-md-3">Position X ([[slot.min_x]], [[slot.max_x]])</label>
@@ -18,6 +17,14 @@
 			</li>
 			<div class="clearfix"></div>
 		</ul>
+		<!-- SVG diagram -->
+		<object data="/static/images/cube.svg" type="text/svg+xml" class="col-md-4">
+			<param name="run_id"  value="[[results.run.id]]"></param>
+			<param name="bin_id"  value="[[bin.bin.id]]"></param>
+		</object>
+		
+		<div class="clearfix"></div>
+
 	    </li>
         </ul>
 	<div class="clearfix"></div>
@@ -31,5 +38,5 @@
  	<h3 ng-if="!results.lost.length>0">
 		No lost items</h3>
 	<div class="clearfix"></div>
-        <a ng-href="[['/']]" class="btn btn-primary btn-default">Go Home</a>
+        <a ng-click="goBack()" class="btn btn-primary btn-default">Go Home</a>
 </div>

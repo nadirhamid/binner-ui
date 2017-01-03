@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+    "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd" [
+    <!ATTLIST svg
+              xmlns:a3 CDATA #IMPLIED
+              a3:scriptImplementation CDATA #IMPLIED>
+    <!ATTLIST script
+              a3:scriptImplementation CDATA #IMPLIED>
+]>
+<svg width="320" height="330" onload="make_shape(evt)"
+     xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns:a3="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+     a3:scriptImplementation="Adobe">
+    <script type="text/ecmascript" a3:scriptImplementation="Adobe"
+            xlink:href="../common/KEL_3D.js" />
+    <script type="text/ecmascript" a3:scriptImplementation="Adobe"
+            xlink:href="../common/Slider.js" />
+    <script type="text/ecmascript" a3:scriptImplementation="Adobe"
+            xlink:href="../common/Node_Builder.js" />
+    <script type="text/ecmascript" a3:scriptImplementation="Adobe"><![CDATA[
+        var origin;
+        var controls;
+
+        var mesh;
+        var slider_tx, slider_ty, slider_tz;
+        var slider_rx, slider_ry, slider_rz;
+        var z_projection = 90;
+        var transform = new Transform();
+
+	function scale_between_v1(unscaled_num, min_allowed, max_allowed, min, max) {
+  	    return (max_allowed - min_allowed) * (unscaled_num - min) / (max - min) + min_allowed
+	}
+	function scale_between_v2(unscaled_num, min_allowed, max_allowed, min, max) {
+	    return unscaled_num;
+	}
+	function scale_between(unscaled_num, min_allowed, max_allowed, min, max) {
+	    return scale_between_v2(unscaled_num, min_allowed, max_allowed, min, max);
+	}
+
+
+        function make_shape(e) {
+            if ( window.svgDocument == null )
+                svgDocument = e.target.ownerDocument;
+
+	    var run_id = document.defaultView.frameElement.getElementsByTagName("param")[0].value;
+	    var bin_id = document.defaultView.frameElement.getElementsByTagName("param")[1].value;
+	    var xhr = new XMLHttpRequest;
+	    xhr.open("GET", "/static/data/"+run_id+".json",true);
+	    xhr.onload = function() {
+		if ( ! (this.status>=200 && this.status<=299) ) {
+			console.log("Status error", this);
+		}
+		
+		var data = JSON.parse( this.responseText );
+		console.log("data loaded", data);
+		origin   = svgDocument.getElementById("origin");
+		controls = svgDocument.getElementById("controls");
+		 for ( var i in data['packed'] ) {
+		   if ( data['packed'][i]['bin']['id'] === bin_id ) {
+			make_box( data['packed'][i]['bin'], data['packed'][i]['slots'] );
+		   }
+		 }
+	     }
+	    xhr.send();
+        }
+
+
+        function make_box(bin, slots) {
+		mesh = new Mesh3D(origin);
+		var min, max;
+		var dimensions = {
+			"w": [],
+			"h": [],
+			"d": []
+		};
+			
+
+	  	function get_bin_parameter( coordinate ) {
+			dimensions[coordinate].push(
+				bin[coordinate] );
+			for ( var  i in slots ) {
+			 	var slot = slots[i];
+				var item = slot.item;
+				dimensions[coordinate].push( 
+				 	 item[coordinate] );
+			}
+		}
+		get_bin_parameter("w");			
+		get_bin_parameter("h");			
+		get_bin_parameter("d");			
+
+		console.log("Dimensions are", dimensions);
+		var max_w, max_h, max_d, min_w, min_h, min_d;
+
+		max_w = Math.max.apply(Math,dimensions['w']);
+		max_h = Math.max.apply(Math,dimensions['h']);
+		max_d = Math.max.apply(Math,dimensions['d']);
+
+		min_w = Math.min.apply(Math,dimensions['w']);
+		min_h = Math.min.apply(Math,dimensions['h']);
+		min_d = Math.min.apply(Math,dimensions['d']);
+		console.log("Min, max coordinates are",{
+			"min_w": min_w,
+			"max_w": max_w,
+			"min_h": min_h,
+			"max_h": max_h,
+			"min_d": min_d,
+			"max_d": max_d,
+		});
+
+
+		min = 0.00;
+		max = 30.00;
+		   
+		slider_tx = new Slider(65, 235, 180, 0, adjust_translate, controls);
+		slider_ty = new Slider(235, 195, 180, 270, adjust_translate, controls);
+		slider_tz = new Slider(260, 195, 180, 270, adjust_translate, controls);
+
+		slider_rx = new Slider(65, 260, 180, 0, adjust_rotation, controls);
+		slider_ry = new Slider(65, 285, 180, 0, adjust_rotation, controls);
+		slider_rz = new Slider(285, 195, 180, 270, adjust_rotation, controls);
+
+		var box_w = scale_between( bin['w'], min, max, min_w, max_w);
+		var box_h = scale_between( bin['h'], min, max, min_h, max_h);
+		var box_d = scale_between( bin['d'], min, max, min_d, max_d);
+		console.log("Bin dimensions are", {
+			"w": box_w,
+			"h": box_h,
+			"d": box_d });
+
+		var org_w = -(box_w);
+		var org_h = -(box_h);
+		var org_d = -(box_d);
+		var org_w_copy = org_w;
+		var org_h_copy = org_h;
+		var org_d_copy = org_d;
+
+	var p1 = mesh.add_vertex(org_w, org_h, org_d);
+	var p2 = mesh.add_vertex(org_w, org_h,  box_d);
+	var p3 = mesh.add_vertex(org_w,  box_h,  box_d);
+	var p4 = mesh.add_vertex(org_w,  box_h, org_d);
+	var p5 = mesh.add_vertex( box_w, org_h, org_d);
+	var p6 = mesh.add_vertex( box_w, org_h,  box_d);
+	var p7 = mesh.add_vertex( box_w,  box_h,  box_d);
+	var p8 = mesh.add_vertex( box_w,  box_h, org_d);
+
+
+
+            mesh.add_edge(p1, p2);
+            mesh.add_edge(p2, p3);
+            mesh.add_edge(p3, p4);
+            mesh.add_edge(p4, p1);
+
+            mesh.add_edge(p1, p5);
+            mesh.add_edge(p2, p6);
+            mesh.add_edge(p3, p7);
+            mesh.add_edge(p4, p8);
+
+            mesh.add_edge(p5, p6);
+            mesh.add_edge(p6, p7);
+            mesh.add_edge(p7, p8);
+            mesh.add_edge(p8, p5);
+
+ 	    for ( var i in slots ) {
+		 var item,slot;
+		 slot = slots[i];
+		 item = slot.item;
+	 	 var slot_min_x =slot.min_x*2;
+		 var slot_max_x =slot_min_x+item.w;
+		 var slot_min_y =slot.min_y*2;
+		 var slot_max_y = slot_min_y+item.h;
+		 var slot_min_z = slot.min_z*2;
+		 var slot_max_z = slot_min_z+item.d;
+		  var org_w_1 =  org_w + item.w;
+		  var org_h_1 =  org_h + item.h;
+		  var org_d_1 = org_d + item.d;
+		var p1 = mesh.add_vertex(
+			(slot_min_x+org_w),
+			(slot_min_y+org_h),
+			(slot_min_z+org_d) );
+
+		
+		var p2 = mesh.add_vertex(
+			(slot_min_x+org_w),
+			(slot_min_y+org_h),
+			(slot_max_z+org_d_1) );
+		var p3 = mesh.add_vertex(
+			(slot_min_x+org_w),
+			(slot_max_y+org_h_1),
+			(slot_max_z+org_d_1));
+		var p4 = mesh.add_vertex(
+			(slot_min_x+org_w),
+			(slot_max_y+org_h_1),
+			(slot_min_z+org_d));
+		var p5 = mesh.add_vertex( 
+			(slot_max_x+org_w_1),
+			(slot_min_y+org_h),
+			(slot_min_z+org_d));
+		var p6 = mesh.add_vertex( 
+			(slot_max_x+org_w_1),
+			(slot_min_y+org_h),
+			(slot_max_z+org_d_1));
+		var p7 = mesh.add_vertex( 
+			(slot_max_x+org_w_1),
+			(slot_max_y+org_h_1),
+			(slot_max_z+org_d_1));
+		var p8 = mesh.add_vertex(
+			(slot_max_x+org_w_1),
+			(slot_max_y+org_h_1),
+			(slot_min_z+org_d));
+		    mesh.add_edge(p1, p2);
+		    mesh.add_edge(p2, p3);
+		    mesh.add_edge(p3, p4);
+		    mesh.add_edge(p4, p1);
+
+		    mesh.add_edge(p1, p5);
+		    mesh.add_edge(p2, p6);
+		    mesh.add_edge(p3, p7);
+		    mesh.add_edge(p4, p8);
+
+		    mesh.add_edge(p5, p6);
+		    mesh.add_edge(p6, p7);
+		    mesh.add_edge(p7, p8);
+		    mesh.add_edge(p8, p5);
+
+		}
+
+
+	    slider_tx.set_minmax(-90, 90);
+	    slider_ty.set_minmax(-90, 90);
+	    slider_tz.set_minmax(-270, 90);
+	    slider_rx.set_minmax(Math.PI, -Math.PI);
+	    slider_ry.set_minmax(Math.PI, -Math.PI);
+	    slider_rz.set_minmax(Math.PI, -Math.PI);
+	    slider_tz.set_value( -90 );
+	    adjust_translate();
+	    adjust_rotation();
+        }
+
+        function adjust_translate(position) {
+            transform.translate(slider_tx.value, slider_ty.value, slider_tz.value);
+            mesh.draw(transform);
+        }
+
+        function adjust_rotation() {
+            transform.rotate(slider_rz.value, slider_rx.value, slider_ry.value);
+            mesh.draw(transform);
+        }
+    ]]></script>
+    <rect width="100%" height="100%" style="fill:white" />
+    <g id="origin" transform="translate(115,115)">
+        <rect x="-100" y="-100" width="200" height="200" style="fill: #FFF"/>
+    </g>
+    <g id="controls">
+        <text x="30" y="245">x</text>
+        <text x="30" y="270">yaw</text>
+        <text x="30" y="295">roll</text>
+        <text x="240" y="220">y</text>
+        <text x="265" y="220">z</text>
+        <text x="290" y="220">pitch</text>
+    </g>
+</svg>
+
