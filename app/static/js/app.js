@@ -89,6 +89,13 @@ angular.module("binnerWeb", ['ngRoute', 'ngMaterial'])
 			var args = {};
 			args['multi_use_smallest_bins']=$scope.multiUseSmallestBins.value;
 			args['algorithm'] = $scope.selectedAlgorithm.value;
+			$shared.data.selectedAlgorithm=$scope.selectedAlgorithm;
+			$shared.data.multiUseSmallestBins=$scope.multiUseSmallestBins;
+			$shared.data.bins =$scope.bins;
+			$shared.data.items =$scope.items;
+
+
+
 			var fullData = {
 				"args":  args,
 				"items": $scope.items,
@@ -104,14 +111,6 @@ angular.module("binnerWeb", ['ngRoute', 'ngMaterial'])
 		$scope.addItem = function() {
 			$scope.items.push( angular.copy($scope.entityTemplate) );
 		};
-		$scope.goBack = function() {
-			$shared.data.selectedAlgorithm=$scope.selectedAlgorithm;
-			$shared.data.multiUseSmallestBins=$scope.multiUseSmallestBins;
-			$shared.data.bins =$scope.bins;
-			$shared.data.items =$scope.items;
-			$location.path("/");
-		};
-
 
 		$scope.removeArgument = function(arg) {
 			$scope.args.splice(  $scope.args.indexOf( arg ), 1 );
