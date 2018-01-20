@@ -58,7 +58,9 @@
 		controls = svgDocument.getElementById("controls");
 		 for ( var i in data['packed'] ) {
 		   if ( data['packed'][i]['bin']['id'] === bin_id ) {
-			make_box( data['packed'][i]['bin'], data['packed'][i]['slots'] );
+			var bin = data['packed'][i]['bin'];
+			var slots = data['packed'][i]['slots'];
+			make_box( bin, slots );
 		   }
 		 }
 	     }
