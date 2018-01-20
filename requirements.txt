@@ -8,3 +8,4 @@ itsdangerous==0.24
 simplejson==3.5.2
 wsgiref==0.1.2
 bunch==1.0.1
+Binner==0.3.0
